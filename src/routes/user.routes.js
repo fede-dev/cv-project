@@ -1,13 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const userService = require("../service/userService");
+const { error_handler } = require("../middleware/error_handler.js");
 
 router.get("/", async (req, res) => {
   try {
     let result = await userService.getRegistedUsers();
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json("Users not found");
+    res
+      .status(500)
+      .json(error_handler(error, "Can´t found users", code_status));
   }
 });
 
