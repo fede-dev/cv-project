@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userService = require("../service/userService");
 const { error_handler } = require("../middleware/error_handler.js");
+const verify_token = require("../middleware/jwt_auth");
 
 router.get("/", async (req, res) => {
   try {
@@ -22,6 +23,34 @@ router.post("/registro", async (req, res) => {
   } catch (error) {
     res.status(500).json("Can´t create a new user");
   }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const user = req.body;
+    let user_found = await userService.findUserByEmail(user.email);
+    if (!user_found) {
+      res
+        .status(404)
+        .json(makeObjError(error, "user or password was invalid", 404));
+    }
+    const user_token = { user: user_found.email, id: user_found._id };
+
+    const token = await userService.make_token(
+      user_found.password,
+      user.password,
+      user_token
+    );
+    res.json({ token: token });
+  } catch (error) {
+    res.status(500).json("Bad request");
+  }
+});
+
+//validar el token para ruta privada.
+
+router.get("/profile", verify_token, (req, res) => {
+  res.status(200).json("profile access");
 });
 
 router.put("/:id", async (req, res) => {

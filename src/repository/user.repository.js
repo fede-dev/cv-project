@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const { User } = require("../model/user");
 
 const getUsers = async () => {
@@ -5,9 +6,20 @@ const getUsers = async () => {
   return users;
 };
 
+/*cuando se crea el usuario hay que calidar el mail para que no se creen con mismo mail
+if (user.email) {
+  return;
+} else {
+  creacion user
+*/
 const getCreateUser = async (user) => {
-  const newUser = await User.create(user);
-  return newUser;
+  if (!user) {
+    throw new Error("user has already declarded");
+  } else {
+    user.password = await bcrypt.hash(user.password, 8);
+    let newUser = await User.create(user);
+    return newUser;
+  }
 };
 
 const getUserById = async (user_id, update_user) => {
@@ -15,6 +27,11 @@ const getUserById = async (user_id, update_user) => {
     new: true,
   }).exec();
   return userId;
+};
+
+const getUserByEmail = async (user_email) => {
+  const email = await User.findOne({ email: user_email }).exec();
+  return email;
 };
 
 const deleteUserById = async (user_id) => {
@@ -26,5 +43,6 @@ module.exports = {
   getUsers,
   getCreateUser,
   getUserById,
+  getUserByEmail,
   deleteUserById,
 };
