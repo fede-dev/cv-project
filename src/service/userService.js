@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const {
   getUsers,
   getCreateUser,
@@ -20,8 +21,8 @@ const findUserById = async (user_id, update_user) => {
   return userId;
 };
 
-const findUserByEmail = async (user_email) => {
-  const userEmail = await getUserByEmail(user_email);
+const findUserByEmail = async (user_find) => {
+  const userEmail = await getUserByEmail(user_find);
   return userEmail;
 };
 
@@ -30,16 +31,18 @@ const getDeleteUser = async (user_id) => {
   return deleteUser;
 };
 
-const make_token = async (hashPassword, comparePassword, userToken) => {
+const generateToken = async (hashPassword, comparePassword, userToken) => {
   return new Promise((res, rej) => {
-    if (bcrypt.compareSync(comparePassword, hashPassword)) {
+    if (bcryptjs.compareSync(comparePassword, hashPassword)) {
       jwt.sign(
         { user: userToken },
         process.env.SECRET_KEY,
         { expiresIn: "24h" },
         (err, token) => {
-          if (error) {
+          if (err) {
             rej("password y usuario invalido");
+          } else {
+            res({ token: token });
           }
         }
       );
@@ -55,5 +58,5 @@ module.exports = {
   findUserById,
   findUserByEmail,
   getDeleteUser,
-  make_token,
+  generateToken,
 };

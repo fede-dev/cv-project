@@ -2,18 +2,18 @@ const jwt = require("jsonwebtoken");
 const { error_handler } = require("./error_handler");
 
 const verify_token = (req, res, next) => {
-  const header = req.header("Authorization");
-
-  if (header) {
-    jwt.verify(header, process.env.SECRET_KEY, (error, token) => {
+  const bearerHeader = req.header("Authorization");
+  if (bearerHeader) {
+    jwt.verify(bearerHeader, process.env.SECRET_KEY, (error, tokenInfo) => {
       if (error) {
         res
           .status(403)
           .json(error_handler(error, "An Error on Verification", 403));
+        return;
       } else {
-        req.user = token.user;
-        //console.log(token.user);
+        req.user = tokenInfo.user;
       }
+
       next();
     });
   } else {

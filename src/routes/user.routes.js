@@ -3,15 +3,15 @@ const router = express.Router();
 const userService = require("../service/userService");
 const { error_handler } = require("../middleware/error_handler.js");
 const verify_token = require("../middleware/jwt_auth");
+const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
   try {
     let result = await userService.getRegistedUsers();
     res.status(200).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json(error_handler(error, "Can´t found users", code_status));
+    res.status(500).json("Can´t found users" + error);
   }
 });
 
@@ -19,35 +19,60 @@ router.post("/registro", async (req, res) => {
   try {
     const user = req.body;
     const result = await userService.registerNewUser(user);
-    res.status(200).json(result);
+    res.status(201).json({ id: result._id });
   } catch (error) {
-    res.status(500).json("Can´t create a new user");
+    res.status(500).json("Can´t create a new user" + error);
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
     const user = req.body;
-    let user_found = await userService.findUserByEmail(user.email);
-    if (!user_found) {
-      res
-        .status(404)
-        .json(makeObjError(error, "user or password was invalid", 404));
-    }
-    const user_token = { user: user_found.email, id: user_found._id };
 
-    const token = await userService.make_token(
-      user_found.password,
+    let user_find = await userServices.findUserByEmail(user.email);
+
+    if (!user_find) {
+      res.status(404).json("user or password was invalid");
+    }
+    const userToken = { user: user_find.email, id: user_find.id };
+    let token = await userServices.generateToken(
+      user_find.password,
       user.password,
-      user_token
+      userToken
     );
-    res.json({ token: token });
+    res.status(200).json({ token: token });
   } catch (error) {
-    res.status(500).json("Bad request");
+    res.status(400).json("Bad request");
   }
 });
 
-//validar el token para ruta privada.
+router.get("/verify", (req, res) => {
+  jwt.verify(
+    req.header("Authorization"),
+    process.env.SECRET_KEY,
+    (error, dataUser) => {
+      if (error) {
+        res.status(403).json("An Error on verification");
+      } else {
+        res
+          .status(200)
+          .json({ message: "Acceso Autorizado", dataUser: dataUser });
+      }
+    }
+  );
+});
+
+router.post("/crypt", async (req, res) => {
+  const password = req.body.password;
+  if (password) {
+    let passwordHash = await bcryptjs.hash(password, 8);
+    res
+      .status(200)
+      .json({ message: "Encrypt Password OK!", passwordHash: passwordHash });
+  } else {
+    res.status(403).json("Denegado");
+  }
+});
 
 router.get("/profile", verify_token, (req, res) => {
   res.status(200).json("profile access");
@@ -60,7 +85,7 @@ router.put("/:id", async (req, res) => {
     const result = await userService.findUserById(user_id, update_user);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json("Can´t modify user");
+    res.status(500).json("Can´t modify user" + error);
   }
 });
 
@@ -70,7 +95,7 @@ router.delete("/:id", async (req, res) => {
     const result = await userService.getDeleteUser(user_id);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json("Can´t errase user");
+    res.status(500).json("Can´t errase user" + error);
   }
 });
 

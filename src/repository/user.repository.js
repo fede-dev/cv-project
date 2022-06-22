@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const { User } = require("../model/user");
 
 const getUsers = async () => {
@@ -16,7 +17,7 @@ const getCreateUser = async (user) => {
   if (!user) {
     throw new Error("user has already declarded");
   } else {
-    user.password = await bcrypt.hash(user.password, 8);
+    user.password = await bcryptjs.hash(user.password, 8);
     let newUser = await User.create(user);
     return newUser;
   }
@@ -29,8 +30,8 @@ const getUserById = async (user_id, update_user) => {
   return userId;
 };
 
-const getUserByEmail = async (user_email) => {
-  const email = await User.findOne({ email: user_email }).exec();
+const getUserByEmail = async (user_find) => {
+  const email = await User.findOne({ email: user_find }).exec();
   return email;
 };
 
