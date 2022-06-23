@@ -29,13 +29,14 @@ router.post("/login", async (req, res) => {
   try {
     const user = req.body;
 
-    let user_find = await userServices.findUserByEmail(user.email);
+    let user_find = await userService.findUserByEmail(user.email);
 
     if (!user_find) {
       res.status(404).json("user or password was invalid");
     }
+
     const userToken = { user: user_find.email, id: user_find.id };
-    let token = await userServices.generateToken(
+    let token = await userService.generateToken(
       user_find.password,
       user.password,
       userToken
@@ -76,6 +77,16 @@ router.post("/crypt", async (req, res) => {
 
 router.get("/profile", verify_token, (req, res) => {
   res.status(200).json("profile access");
+});
+
+router.get("/email", async (req, res) => {
+  try {
+    const user = req.body;
+    let user_find = await userService.findUserByEmail(user.email);
+    res.status(200).json(user_find);
+  } catch (error) {
+    res.status(403).json("Denegado" + error);
+  }
 });
 
 router.put("/:id", async (req, res) => {

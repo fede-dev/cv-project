@@ -5,6 +5,7 @@ const {
   getUsers,
   getCreateUser,
   getUserById,
+  getUserByEmail,
   deleteUserById,
 } = require("../repository/user.repository");
 
@@ -42,7 +43,7 @@ const generateToken = async (hashPassword, comparePassword, userToken) => {
           if (err) {
             rej("password y usuario invalido");
           } else {
-            res({ token: token });
+            res({ token });
           }
         }
       );
