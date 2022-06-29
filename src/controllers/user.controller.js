@@ -7,7 +7,7 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const userController = {
-  async all_users(req, res) {
+  all_users: async (req, res) => {
     try {
       let result = await userService.getRegistedUsers();
       res.status(200).json(result);
@@ -16,7 +16,7 @@ const userController = {
     }
   },
 
-  async create_user(req, res) {
+  create_user: async (req, res) => {
     try {
       const user = req.body;
       const result = await userService.registerNewUser(user);
@@ -26,14 +26,13 @@ const userController = {
     }
   },
 
-  async login_user(req, res) {
+  login_user: async (req, res) => {
     try {
       const user = req.body;
       let user_find = await userService.findUserByEmail(user.email);
       if (!user_find) {
         res.status(404).json("user or password was invalid");
       }
-
       const userToken = { user: user_find.email, id: user_find.id };
       let token = await userService.generateToken(
         user_find.password,
@@ -46,7 +45,7 @@ const userController = {
     }
   },
 
-  async user_profile(req, res) {
+  user_profile: async (req, res) => {
     if (verify_token) {
       res.status(200).json("profile access");
     } else {
@@ -54,7 +53,7 @@ const userController = {
     }
   },
 
-  async verify_user_token(req, res) {
+  verify_user_token: async (req, res) => {
     jwt.verify(
       req.header("Authorization"),
       process.env.SECRET_KEY,
@@ -70,7 +69,7 @@ const userController = {
     );
   },
 
-  async crypt_compare(req, res) {
+  crypt_compare: async (req, res) => {
     const password = req.body.password;
     if (password) {
       let passwordHash = await bcryptjs.hash(password, 8);
@@ -81,7 +80,7 @@ const userController = {
       res.status(403).json("Denegado");
     }
   },
-  async email_user(req, res) {
+  email_user: async (req, res) => {
     try {
       const user = req.body;
       let user_find = await userService.findUserByEmail(user.email);
@@ -91,7 +90,7 @@ const userController = {
     }
   },
 
-  async update_user(req, res) {
+  update_user: async (req, res) => {
     try {
       const user_id = req.params.id;
       const update_user = req.body;
@@ -101,7 +100,7 @@ const userController = {
       res.status(500).json("Can´t modify user" + error);
     }
   },
-  async delete_user(req, res) {
+  delete_user: async (req, res) => {
     try {
       const user_id = req.params.id;
       const result = await userService.getDeleteUser(user_id);

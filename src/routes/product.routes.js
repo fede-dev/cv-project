@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const productService = require("../service/productService");
 
 router.get("/", async (req, res) => {
   try {
@@ -10,7 +11,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/subir-producto", async (req, res) => {
+router.post("/crear-producto", async (req, res) => {
   try {
     const product = req.body;
     let result = await productService.uploadProduct(product);
@@ -19,3 +20,29 @@ router.post("/subir-producto", async (req, res) => {
     res.status(500).json("Can´t create product" + error);
   }
 });
+
+router.put("/actualizar-producto/:id", async (req, res) => {
+  try {
+    const product = req.body;
+    const product_id = req.params.id;
+    let product_update = await productService.updateProduct(
+      product_id,
+      product
+    );
+    res.status(200).json(product_update);
+  } catch (error) {
+    res.status(400).json("Product update denegade" + error);
+  }
+});
+
+router.delete("/eliminar-producto/:id", async (req, res) => {
+  try {
+    const product_id = req.params.id;
+    let product_delete = await productService.deleteProduct(product_id);
+    res.status(200).json(product_delete);
+  } catch (error) {
+    res.status(400).json("Product delete denegade" + error);
+  }
+});
+
+module.exports = router;

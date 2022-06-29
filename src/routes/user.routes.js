@@ -18,6 +18,13 @@ router.get("/", async (req, res) => {
 router.post("/registro", async (req, res) => {
   try {
     const user = req.body;
+    /*
+      if(user.length >= 1){
+      return res.status(409).json({
+        messege: "email already taken"
+      })
+     }
+    */
     const result = await userService.registerNewUser(user);
     res.status(201).json({ id: result._id });
   } catch (error) {
