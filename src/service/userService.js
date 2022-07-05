@@ -5,6 +5,7 @@ const {
   getUsers,
   getCreateUser,
   getUserById,
+  getUserId,
   getUserByEmail,
   deleteUserById,
 } = require("../repository/user.repository");
@@ -22,8 +23,13 @@ const findUserById = async (user_id, update_user) => {
   return userId;
 };
 
-const findUserByEmail = async (user_find) => {
-  const userEmail = await getUserByEmail(user_find);
+const findUserId = async (user_id) => {
+  const userId = await getUserId(user_id);
+  return userId;
+};
+
+const findUserByEmail = async (user) => {
+  const userEmail = await getUserByEmail(user);
   return userEmail;
 };
 
@@ -57,6 +63,7 @@ module.exports = {
   getRegistedUsers,
   registerNewUser,
   findUserById,
+  findUserId,
   findUserByEmail,
   getDeleteUser,
   generateToken,

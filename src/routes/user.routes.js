@@ -86,10 +86,11 @@ router.get("/profile", verify_token, (req, res) => {
   res.status(200).json("profile access");
 });
 
-router.get("/email", async (req, res) => {
+router.get("/email/:id", async (req, res) => {
   try {
-    const user = req.body;
-    let user_find = await userService.findUserByEmail(user.email);
+    const user = req.params.id;
+    const email = req.body.email;
+    let user_find = await userService.findUserByEmail(user);
     res.status(200).json(user_find);
   } catch (error) {
     res.status(403).json("Denegado" + error);

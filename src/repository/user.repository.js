@@ -7,18 +7,13 @@ const getUsers = async () => {
   return users;
 };
 
-/*cuando se crea el usuario hay que calidar el mail para que no se creen con mismo mail
-if (user.email) {
-  return;
-} else {
-  creacion user
-*/
 const getCreateUser = async (user) => {
   if (!user) {
     throw new Error("user has already declarded");
   } else {
     user.password = await bcryptjs.hash(user.password, 8);
     let newUser = await User.create(user);
+
     return newUser;
   }
 };
@@ -30,8 +25,17 @@ const getUserById = async (user_id, update_user) => {
   return userId;
 };
 
-const getUserByEmail = async (user_find) => {
-  const email = await User.findOne({ email: user_find }).exec();
+const getUserId = async (user_id) => {
+  const userId = await User.findById(user_id, {
+    new: true,
+  }).exec();
+  return userId;
+};
+
+const getUserByEmail = async (user) => {
+  const email = await User.findById({
+    user,
+  }).exec();
   return email;
 };
 
@@ -44,6 +48,7 @@ module.exports = {
   getUsers,
   getCreateUser,
   getUserById,
+  getUserId,
   getUserByEmail,
   deleteUserById,
 };

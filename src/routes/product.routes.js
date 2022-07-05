@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const productService = require("../service/productService");
+const userService = require("../service/userService");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,6 +15,7 @@ router.get("/", async (req, res) => {
 router.post("/crear-producto", async (req, res) => {
   try {
     const product = req.body;
+    const user_id = req.body.id;
     let result = await productService.uploadProduct(product);
     res.status(201).json({ id: result._id });
   } catch (error) {
