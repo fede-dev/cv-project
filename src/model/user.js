@@ -20,7 +20,7 @@ const user_schema = mongoose.Schema(
       type: String,
       required: true,
     },
-    products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    //products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   }
   // { timestamps: true }
 );

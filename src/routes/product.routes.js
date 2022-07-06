@@ -14,8 +14,16 @@ router.get("/", async (req, res) => {
 
 router.post("/crear-producto", async (req, res) => {
   try {
-    const product = req.body;
-    const user_id = req.body.id;
+    const user = req.body.user_id;
+    let result_id = await userService.findUserId(user);
+    const product = {
+      product_name: req.body.product_name,
+      product_description: req.body.product_description,
+      product_price: req.body.product_price,
+      product_comments: req.body.product_comments,
+      product_category: req.body.product_category,
+      user: result_id,
+    };
     let result = await productService.uploadProduct(product);
     res.status(201).json({ id: result._id });
   } catch (error) {

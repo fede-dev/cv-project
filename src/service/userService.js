@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const bcryptjs = require("bcryptjs");
 const {
   getUsers,
@@ -28,8 +27,8 @@ const findUserId = async (user_id) => {
   return userId;
 };
 
-const findUserByEmail = async (user) => {
-  const userEmail = await getUserByEmail(user);
+const findUserByEmail = async (emailUser) => {
+  const userEmail = await getUserByEmail(emailUser);
   return userEmail;
 };
 

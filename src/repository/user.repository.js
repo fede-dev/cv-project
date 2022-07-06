@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const bcryptjs = require("bcryptjs");
 const { User } = require("../model/user");
 
@@ -13,9 +12,15 @@ const getCreateUser = async (user) => {
   } else {
     user.password = await bcryptjs.hash(user.password, 8);
     let newUser = await User.create(user);
-
-    return newUser;
+    return newUser.save();
   }
+};
+
+const getUserByEmail = async (emailUser) => {
+  const email = await User.findOne({
+    email: emailUser,
+  }).exec();
+  return email;
 };
 
 const getUserById = async (user_id, update_user) => {
@@ -30,13 +35,6 @@ const getUserId = async (user_id) => {
     new: true,
   }).exec();
   return userId;
-};
-
-const getUserByEmail = async (user) => {
-  const email = await User.findById({
-    user,
-  }).exec();
-  return email;
 };
 
 const deleteUserById = async (user_id) => {

@@ -18,7 +18,14 @@ const product_schema = mongoose.Schema({
     type: String,
     required: true,
   },
-  owner: { type: Schema.Types.ObjectId, ref: "User" },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  product_category: {
+    type: String,
+    required: true,
+  },
 });
 
 const Product = mongoose.model("Product", product_schema);

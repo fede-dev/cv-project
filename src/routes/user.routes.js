@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
   try {
+    // req.session.isAuth = true;
+    // console.log(req.session.id);
     let result = await userService.getRegistedUsers();
     res.status(200).json(result);
   } catch (error) {
@@ -18,13 +20,6 @@ router.get("/", async (req, res) => {
 router.post("/registro", async (req, res) => {
   try {
     const user = req.body;
-    /*
-      if(user.length >= 1){
-      return res.status(409).json({
-        messege: "email already taken"
-      })
-     }
-    */
     const result = await userService.registerNewUser(user);
     res.status(201).json({ id: result._id });
   } catch (error) {
@@ -35,19 +30,20 @@ router.post("/registro", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const user = req.body;
-
-    let user_find = await userService.findUserByEmail(user.email);
-
+    console.log(user);
+    const emailUser = user.email;
+    let user_find = await userService.findUserByEmail(emailUser);
+    console.log("ACA" + user_find);
     if (!user_find) {
       res.status(404).json("user or password was invalid");
     }
-
     const userToken = { user: user_find.email, id: user_find.id };
     let token = await userService.generateToken(
       user_find.password,
       user.password,
       userToken
     );
+    //req.session.userName = emailUser;
     res.status(200).json({ token: token });
   } catch (error) {
     res.status(400).json("Bad request");
@@ -84,6 +80,13 @@ router.post("/crypt", async (req, res) => {
 
 router.get("/profile", verify_token, (req, res) => {
   res.status(200).json("profile access");
+});
+
+router.post("/logout", (req, res) => {
+  req.session.destroy((error) => {
+    if (error) throw error;
+    res.status(400).json("Error");
+  });
 });
 
 router.get("/email/:id", async (req, res) => {
