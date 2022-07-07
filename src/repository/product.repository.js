@@ -7,7 +7,7 @@ const allProducts = async () => {
 
 const createProduct = async (product) => {
   const created_product = await Product.create(product);
-  return created_product;
+  return created_product.save();
 };
 
 const modifyProduct = async (product_id, product) => {
