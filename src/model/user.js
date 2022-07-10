@@ -21,6 +21,7 @@ const user_schema = mongoose.Schema(
       required: true,
     },
     products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    blogs: [{ type: Schema.Types.ObjectId, ref: "Blog" }],
   }
   // { timestamps: true }
 );

@@ -55,4 +55,6 @@ router.delete("/eliminar-producto/:id", async (req, res) => {
   }
 });
 
+//populate
+
 module.exports = router;
