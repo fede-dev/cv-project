@@ -42,6 +42,12 @@ const deleteUserById = async (user_id) => {
   return deleteUser;
 };
 
+//populate
+const BlogUserById = async (user_id) => {
+  const BlogUser = await User.findOne({ _id: user_id }).populate("Blog").exec();
+  return BlogUser;
+};
+
 module.exports = {
   getUsers,
   getCreateUser,
@@ -49,4 +55,5 @@ module.exports = {
   getUserId,
   getUserByEmail,
   deleteUserById,
+  BlogUserById,
 };

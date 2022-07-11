@@ -5,12 +5,12 @@ const blog_schema = mongoose.Schema({
   title: {
     type: String,
   },
+  body: {
+    type: String,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-  },
-  body: {
-    type: String,
   },
   comments: [
     {

@@ -32,11 +32,11 @@ app.use(function errorMiddlewre(err, req, res, next) {
 
 app.use("/api", routes);
 
-app.use((req, res) => {
-  res.type("text/plain");
-  res.status(404);
-  res.send("404 - not found");
-});
+// app.use((req, res) => {
+//   res.type("text/plain");
+//   res.status(404);
+//   res.send("404 - not found");
+// });
 
 app.listen(PORT, async (error) => {
   if (error) {

@@ -121,4 +121,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+//populate
+router.get("/blogs/:id", async (req, res) => {
+  try {
+    const user_id = req.params.id;
+    const result = await userService.getBlogUser(user_id);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json("Can´t errase user" + error);
+  }
+});
+
 module.exports = router;

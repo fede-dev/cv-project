@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Foodmatch is an e-commerce where users can find best prices buying wholesale purchases",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Federico Enriquez",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
