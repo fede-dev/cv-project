@@ -59,12 +59,6 @@ const generateToken = async (hashPassword, comparePassword, userToken) => {
   });
 };
 
-//populate
-const getBlogUser = async (user_id) => {
-  const BlogUser = await BlogUserById(user_id);
-  return BlogUser;
-};
-
 module.exports = {
   getRegistedUsers,
   registerNewUser,
@@ -73,5 +67,4 @@ module.exports = {
   findUserByEmail,
   getDeleteUser,
   generateToken,
-  getBlogUser,
 };

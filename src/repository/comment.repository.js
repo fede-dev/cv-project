@@ -9,7 +9,7 @@ const createComment = async (comment) => {
   if (!comment) {
     throw new Error("user has already declarded");
   } else {
-    let newComment = await User.create(comment);
+    let newComment = await Comment.create(comment);
     return newComment.save();
   }
 };
