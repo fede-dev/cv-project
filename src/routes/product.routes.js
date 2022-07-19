@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const productService = require("../service/productService");
 const userService = require("../service/userService");
+const { Product } = require("../model/product");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.post("/crear-producto", async (req, res) => {
   try {
-    const user = req.body.user_id;
+    const user = req.body.owner;
     let result_id = await userService.findUserId(user);
     const product = {
       product_name: req.body.product_name,
@@ -22,7 +23,7 @@ router.post("/crear-producto", async (req, res) => {
       product_price: req.body.product_price,
       product_comments: req.body.product_comments,
       product_category: req.body.product_category,
-      user: result_id,
+      owner: result_id,
     };
     let result = await productService.uploadProduct(product);
     res.status(201).json({ id: result._id });
@@ -56,5 +57,27 @@ router.delete("/eliminar-producto/:id", async (req, res) => {
 });
 
 //populate
+router.get("/populate", async (req, res) => {
+  try {
+    const result = await Product.findOne({ product_name: "milanesa" })
+      .populate("owner")
+      .exec();
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json("no" + error);
+  }
+});
+
+router.get("/populate/:productName", async (req, res) => {
+  try {
+    const productName = req.params.productName;
+    const result = await Product.findOne({ product_name: productName })
+      .populate("owner")
+      .exec();
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json("no" + error);
+  }
+});
 
 module.exports = router;
