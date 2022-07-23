@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const productService = require("../service/productService");
 const userService = require("../service/userService");
-const { Product } = require("../model/product");
 
 router.get("/", async (req, res) => {
   try {
@@ -56,6 +55,33 @@ router.delete("/eliminar-producto/:id", async (req, res) => {
   }
 });
 
+router.get("/buscar/:productName", async (req, res) => {
+  try {
+    const productName = req.params.productName;
+    const find_product = await productService.findProduct(productName);
+    res.status(200).json(find_product);
+  } catch (error) {
+    res.status(400).json("Can´t find any product " + error);
+  }
+});
+
+router.get("*", (req, res) => {
+  res.status(404).json("This page doesn´t exist");
+});
+
+// router.get("/buscar?producto=productName", async (req, res) => {
+//   try {
+//     const productName = req.query.productName;
+//     const find_product = await productService.findProduct(productName);
+//     res.status(200).json(find_product);
+//   } catch (error) {
+//     res.status(400).json("Can´t find any product " + error);
+//   }
+// });
+
+module.exports = router;
+
+/*
 //populate
 router.get("/populate", async (req, res) => {
   try {
@@ -68,7 +94,7 @@ router.get("/populate", async (req, res) => {
   }
 });
 
-router.get("/populate/:productName", async (req, res) => {
+router.get("/buscar/:productName", async (req, res) => {
   try {
     const productName = req.params.productName;
     const result = await Product.findOne({ product_name: productName })
@@ -79,5 +105,4 @@ router.get("/populate/:productName", async (req, res) => {
     res.status(400).json("no" + error);
   }
 });
-
-module.exports = router;
+ */

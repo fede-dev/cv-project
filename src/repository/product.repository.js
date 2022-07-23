@@ -23,9 +23,17 @@ const productDelete = async (product_id) => {
   return destroy_product;
 };
 
+const productFind = async (productName) => {
+  const finding_product = await Product.findOne({
+    product_name: productName,
+  }).exec();
+  return finding_product;
+};
+
 module.exports = {
   allProducts,
   createProduct,
   modifyProduct,
   productDelete,
+  productFind,
 };
